@@ -3,12 +3,17 @@ package main
 import (
 	"database/sql"
 	"log"
+	"os"
 	"to-do-api/cmd/api"
 	"to-do-api/db"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	db, ok := db.NewPostgre(map[string]string{})
+	godotenv.Load(".env")
+	log.Print(os.Getenv("CONNSTRING"))
+	db, ok := db.NewPostgre(os.Getenv("CONNSTRING"))
 	if ok != nil {
 		log.Fatal(ok)
 	}
@@ -21,6 +26,9 @@ func main() {
 }
 
 func ConnectDB(db *sql.DB) {
-	db.Ping()
-	db.Close()
+	err := db.Ping()
+	if err != nil {
+		log.Fatal(err)
+	}
+	// defer db.Close()
 }

@@ -1,8 +1,9 @@
 package user
 
 import (
-	"encoding/json"
 	"net/http"
+	"to-do-api/types"
+	"to-do-api/utils"
 
 	"github.com/gorilla/mux"
 )
@@ -20,7 +21,12 @@ func (h *Handler) RegisterRoutes(router *mux.Router) {
 }
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode("testing")
+	// get json payload
+	var payload types.RegisterUsers
+	err := utils.ParseJSON(r, payload)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+	}
 }
 
 func (h *Handler) LoginUser(w http.ResponseWriter, r *http.Request) {
